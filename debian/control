@@ -62,7 +62,7 @@ Description: generic font configuration library - support binaries
 Package: libfontconfig1-dev
 Section: libdevel
 Architecture: any
-Depends: libfontconfig1 (= ${binary:Version}), libexpat1-dev, libfreetype6-dev (>= 2.1.7), pkg-config
+Depends: libfontconfig1 (= ${binary:Version}), libexpat1-dev, libfreetype6-dev (>= 2.1.7)
 Provides: libfontconfig-dev
 Description: generic font configuration library - development
  Fontconfig is a font configuration and customization library, which

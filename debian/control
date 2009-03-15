@@ -11,8 +11,8 @@ Standards-Version: 3.7.3
 Package: fontconfig
 Section: core
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, fontconfig-config
-Replaces: fontconfig-config (<< 2.5.93-1)
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: fontconfig-config
 Description: generic font configuration library - support binaries
  Fontconfig is a font configuration and customization library, which
  does not depend on the X Window System. It is designed to locate
@@ -76,7 +76,7 @@ Description: generic font configuration library - development
 Package: libfontconfig1
 Section: core
 Architecture: any
-Depends: ${shlibs:Depends}, fontconfig-config (= ${source:Version})
+Depends: ${shlibs:Depends}
 Description: generic font configuration library - runtime
  Fontconfig is a font configuration and customization library, which
  does not depend on the X Window System. It is designed to locate

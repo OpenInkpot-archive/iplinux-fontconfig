@@ -1,4 +1,10 @@
-fontconfig (2.6.0-3.ip1) asimov; urgenc=low
+fontconfig (2.6.0-3.ip2) asimov; urgency=low
+
+  * removed fontconfig-config dependency
+
+ -- Alexander Kerner <lunohod@openinkpot.org>  Sun, 15 Mar 2009 03:03:17 +0100
+
+fontconfig (2.6.0-3.ip1) asimov; urgency=low
 
   * First IPlinux build
 

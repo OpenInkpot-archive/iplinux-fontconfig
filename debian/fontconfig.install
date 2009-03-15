@@ -1,1 +1,2 @@
 debian/tmp/usr/bin/fc-*
+debian/tmp/etc/fonts/*

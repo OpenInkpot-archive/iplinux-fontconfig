@@ -29,11 +29,9 @@ clean::
 	rm -f fc-cache/Makefile fc-list/Makefile fontconfig-config fontconfig.pc config.h
 
 # An empty file will do for enabling bitmaps
-binary-post-install/fontconfig-config::
-	cd debian/fontconfig-config/etc/fonts/conf.avail && \
-		mv 70-yes-bitmaps.conf 70-force-bitmaps.conf
-	cp debian/70-yes-bitmaps.conf debian/fontconfig-config/etc/fonts/conf.avail
-
-# defoma stuff
-#binary-post-install/fontconfig::
-#	dh_installdefoma
+binary-post-install/fontconfig::
+	rm -f debian/fontconfig/etc/fonts/conf.d/*
+	cp debian/55-syslocal.conf debian/fontconfig/etc/fonts/conf.avail
+	cp debian/30-droid.conf debian/fontconfig/etc/fonts/conf.avail
+	ln -s ../conf.avail/30-droid.conf debian/fontconfig/etc/fonts/conf.d
+	ln -s ../conf.avail/55-syslocal.conf debian/fontconfig/etc/fonts/conf.d

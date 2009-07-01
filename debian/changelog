@@ -1,3 +1,9 @@
+fontconfig (2.6.0-3.ip4) asimov; urgency=low
+
+  * Remove unused conf.d entries, add 30-droid.conf, 55-syslocal.conf
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Thu, 02 Jul 2009 06:49:46 +0700
+
 fontconfig (2.6.0-3.ip3+b1) asimov; urgency=low
 
   * Rebuild with new toolchain.

@@ -3,8 +3,8 @@ Section: core
 Priority: optional
 Maintainer: Mikhail Gusarov <dottedmag@dottedmag.net>
 Uploaders: Alexander Kerner <lunohod@openinkpot.org>
-Build-Depends: debhelper (>= 5.0.22), pkg-config, libfreetype6-dev (>= 2.1.7), libexpat1-dev
-XCS-Cross-Host-Build-Depends: debhelper, pkg-config
+Build-Depends: debhelper (>= 5.0.22), pkg-config, automake, libtool, libfreetype6-dev (>= 2.1.7), libexpat1-dev
+XCS-Cross-Host-Build-Depends: debhelper, pkg-config, automake, libtool
 XCS-Cross-Build-Depends: libfreetype6-dev, libexpat1-dev
 Standards-Version: 3.8.3
 

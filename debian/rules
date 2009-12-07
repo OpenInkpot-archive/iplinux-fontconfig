@@ -17,7 +17,7 @@ DEB_DH_MAKESHLIBS_ARGS_libfontconfig1 := -V"libfontconfig1 (>= 2.4.0)"
 DEB_SHLIBDEPS_LIBRARY_fontconfig := libfontconfig1
 DEB_SHLIBDEPS_INCLUDE_fontconfig := debian/libfontconfig1/usr/lib/
 
-DEB_DH_STRIP_ARGS := --dbg-package=libfontconfig1
+DEB_DH_STRIP_ARGS := --dbg-package=libfontconfig1-dbg
 
 DEB_MAKE_ENVVARS := LC_ALL=C
 

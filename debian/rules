@@ -12,7 +12,6 @@ confflags += --prefix=/usr \
 	--disable-docs \
 	--with-add-fonts=/usr/share/fonts,/usr/local/share/fonts \
 	--with-arch=$(DEB_HOST_GNU_TYPE) \
-	--target=$(DEB_HOST_GNU_TYPE) \
 	--host=$(DEB_HOST_GNU_TYPE) \
 	--build=$(DEB_BUILD_GNU_TYPE) \
 	--with-freetype-config='pkg-config freetype2'

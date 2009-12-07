@@ -9,10 +9,8 @@ Format: 3.0 (native)
 Standards-Version: 3.7.3
 
 Package: fontconfig
-Section: core
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Replaces: fontconfig-config
 Description: generic font configuration library - support binaries
  Fontconfig is a font configuration and customization library, which
  does not depend on the X Window System. It is designed to locate
@@ -30,35 +28,6 @@ Description: generic font configuration library - support binaries
  cache files in string form (fc-cat). It also makes fonts managed by defoma
  available to fontconfig applications.
 
-#Package: fontconfig-config
-#Section: core
-#Architecture: all
-##Depends: ${misc:Depends}, ucf (>= 0.29), ttf-dejavu | ttf-bitstream-vera | ttf-freefont | gsfonts-x11
-#Replaces: fontconfig (<< 2.3.2-2)
-#Conflicts: fontconfig (<< 2.3.2-2)
-#Description: generic font configuration library - configuration
-# Fontconfig is a font configuration and customization library, which
-# does not depend on the X Window System. It is designed to locate
-# fonts within the system and select them according to requirements
-# specified by applications.
-# .
-# This package contains the configuration files and scripts for fontconfig.
-#
-#Package: fontconfig-udeb
-#Section: debian-installer
-#XC-Package-Type: udeb
-#Architecture: any
-#Priority: extra
-#Depends: ${shlibs:Depends}
-#Description: generic font configuration library - minimal runtime
-# Fontconfig is a font configuration and customization library, which
-# does not depend on the X Window System. It is designed to locate
-# fonts within the system and select them according to requirements
-# specified by applications.
-# .
-# This package contains the minimal runtime library and configuration,
-# only for use in the installation system.
-
 Package: libfontconfig1-dev
 Section: libdevel
 Architecture: any
@@ -74,7 +43,6 @@ Description: generic font configuration library - development
  development of applications using fontconfig.
 
 Package: libfontconfig1
-Section: core
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: generic font configuration library - runtime
@@ -88,7 +56,6 @@ Description: generic font configuration library - runtime
 
 Package: libfontconfig1-dbg
 Section: debug
-Priority: extra
 Architecture: any
 Depends: libfontconfig1 (= ${binary:Version})
 Description: generic font configuration library - debugging symbols

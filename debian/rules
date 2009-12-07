@@ -6,7 +6,6 @@
 binary/fontconfig:: binary/libfontconfig1
 
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/rules/simple-patchsys.mk
 include /usr/share/cdbs/1/class/autotools.mk
 
 DEB_CONFIGURE_EXTRA_FLAGS := --disable-docs --with-add-fonts=/usr/share/fonts,/usr/local/share/fonts --with-arch=$(DEB_HOST_GNU_TYPE) --target=$(DEB_HOST_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --with-freetype-config='pkg-config freetype2'

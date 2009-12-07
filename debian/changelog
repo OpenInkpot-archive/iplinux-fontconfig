@@ -2,6 +2,7 @@ fontconfig (2.8.0-1) zelazny; urgency=low
 
   * New upstream release.
   * Packaging cleanup.
+  * Replace CDBS with debhelper.
 
  -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 07 Dec 2009 05:01:57 +0600
 

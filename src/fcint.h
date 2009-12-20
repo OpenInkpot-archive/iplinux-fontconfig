@@ -333,7 +333,7 @@ struct _FcCache {
     intptr_t	dirs;		    /* offset to subdirs */
     int		dirs_count;	    /* number of subdir strings */
     intptr_t	set;		    /* offset to font set */
-    int		mtime;		    /* low bits of directory mtime */
+    int		checksum;		    /* checksum of directory state */
 };
 
 #undef FcCacheDir
@@ -537,6 +537,13 @@ FcPrivate int
 FcStat (const char *file, struct stat *statb);
 #else
 #define FcStat stat
+#endif
+
+#ifdef linux
+FcPrivate int
+FcStatChecksum (const char *file, struct stat *statb);
+#else
+#define FcStatChecksum FcStat
 #endif
 
 /* fccfg.c */

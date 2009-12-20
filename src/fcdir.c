@@ -243,7 +243,7 @@ FcDirCacheScan (const FcChar8 *dir, FcConfig *config)
     if (FcDebug () & FC_DBG_FONTSET)
 	printf ("cache scan dir %s\n", dir);
 
-    if (FcStat ((char *) dir, &dir_stat) < 0)
+    if (FcStatChecksum ((char *) dir, &dir_stat) < 0)
     {
 	if (errno != ENOENT)
 	    ret = FcFalse;

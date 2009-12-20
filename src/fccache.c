@@ -36,6 +36,11 @@
 #  define _WIN32_WINNT 0x0500
 #  include <windows.h>
 #endif
+/* For FcFsMtimeBroken */
+#if defined(linux)
+#  include <sys/vfs.h>
+#  include <linux/magic.h>
+#endif
 
 #ifndef O_BINARY
 #define O_BINARY 0
@@ -129,6 +134,124 @@ FcStat (const char *file, struct stat *statb)
     statb->st_mtime = (*(INT64 *)&wfad.ftLastWriteTime)/10000000 - EPOCH_OFFSET;
     statb->st_ctime = statb->st_mtime;
     
+    return 0;
+}
+#endif
+
+/*
+ * Checking for FAT filesystem which broken mtime handling. There is no
+ * cross-platform filesystem type query call, so resort to OS-specific calls.
+ */
+#if defined(linux)
+static FcBool
+FcFsMtimeBroken (const char *file)
+{
+    int ret;
+    struct statfs fs_stat;
+
+    if (FcDebug () & FC_DBG_CACHE)
+	printf ("FcFsMtimeBroken %s\n", file);
+
+    ret = statfs (file, &fs_stat);
+    if (ret == -1)
+	return FcFalse;
+
+    if (FcDebug () & FC_DBG_CACHE)
+	printf ("FcFsMtimeBroken f_type %ld MSDOS_SUPER_MAGIC %d\n",
+	        fs_stat.f_type, MSDOS_SUPER_MAGIC);
+
+    if (fs_stat.f_type == MSDOS_SUPER_MAGIC)
+	return FcTrue;
+
+    return FcFalse;
+}
+#endif
+
+/*
+ * This is to be enabled on all systems which support checking for FAT fs, not
+ * just Linux
+ */
+#if defined(linux)
+
+/* Adler-32 checksum implementation */
+struct Adler32 {
+    int a;
+    int b;
+};
+
+static void
+Adler32Init (struct Adler32 *ctx)
+{
+    ctx->a = 1;
+    ctx->b = 0;
+}
+
+static void
+Adler32Update (struct Adler32 *ctx, const char *data, int data_len)
+{
+    while (data_len--)
+    {
+	ctx->a = (ctx->a + *data++) % 65521;
+	ctx->b = (ctx->b + ctx->a) % 65521;
+    }
+}
+
+static int
+Adler32Finish (struct Adler32 *ctx)
+{
+    return ctx->a + (ctx->b << 16);
+}
+
+/* dirent.d_type could be relied upon on FAT filesystem */
+static FcBool
+FcDirChecksumScandirFilter(const struct dirent *entry)
+{
+    return entry->d_type != DT_DIR;
+}
+
+static int
+FcDirChecksum (const char *dir)
+{
+    struct Adler32 ctx;
+    struct dirent **files;
+    int n;
+    int checksum;
+
+    Adler32Init (&ctx);
+
+    n = scandir (dir, &files, &FcDirChecksumScandirFilter, alphasort);
+    if (n == -1)
+        return -1;
+
+    while (n--)
+    {
+        Adler32Update (&ctx, files[n]->d_name, strlen(files[n]->d_name) + 1);
+        Adler32Update (&ctx, (char *)&files[n]->d_type, sizeof(files[n]->d_type));
+    }
+
+    checksum = Adler32Finish (&ctx);
+
+    /* Whoops. Adler-32 may be -1 as well. "Correct" it. */
+    return checksum == -1 ? 0 : checksum;
+}
+
+int
+FcStatChecksum (const char *file, struct stat *statb)
+{
+    int ret;
+
+    ret = FcStat (file, statb);
+    if (ret == -1)
+        return -1;
+
+    if (FcFsMtimeBroken (file))
+    {
+        int checksum = FcDirChecksum (file);
+        if (checksum == -1)
+            return -1;
+        statb->st_mtime = checksum;
+    }
+
     return 0;
 }
 #endif
@@ -233,7 +356,7 @@ FcDirCacheProcess (FcConfig *config, const FcChar8 *dir,
     struct stat file_stat, dir_stat;
     FcBool	ret = FcFalse;
 
-    if (FcStat ((char *) dir, &dir_stat) < 0)
+    if (FcStatChecksum ((char *) dir, &dir_stat) < 0)
         return FcFalse;
 
     FcDirCacheBasename (dir, cache_base);
@@ -515,14 +638,14 @@ FcCacheTimeValid (FcCache *cache, struct stat *dir_stat)
 
     if (!dir_stat)
     {
-	if (FcStat ((const char *) FcCacheDir (cache), &dir_static) < 0)
+	if (FcStatChecksum ((const char *) FcCacheDir (cache), &dir_static) < 0)
 	    return FcFalse;
 	dir_stat = &dir_static;
     }
     if (FcDebug () & FC_DBG_CACHE)
-	printf ("FcCacheTimeValid dir \"%s\" cache time %d dir time %d\n",
-		FcCacheDir (cache), cache->mtime, (int) dir_stat->st_mtime);
-    return cache->mtime == (int) dir_stat->st_mtime;
+	printf ("FcCacheTimeValid dir \"%s\" cache checksum %d dir checksum %d\n",
+		FcCacheDir (cache), cache->checksum, (int) dir_stat->st_mtime);
+    return cache->checksum == (int) dir_stat->st_mtime;
 }
 
 /*
@@ -683,7 +806,7 @@ FcDirCacheValidateHelper (int fd, struct stat *fd_stat, struct stat *dir_stat, v
 	ret = FcFalse;
     else if (fd_stat->st_size != c.size)
 	ret = FcFalse;
-    else if (c.mtime != (int) dir_stat->st_mtime)
+    else if (c.checksum != (int) dir_stat->st_mtime)
 	ret = FcFalse;
     return ret;
 }
@@ -760,7 +883,7 @@ FcDirCacheBuild (FcFontSet *set, const FcChar8 *dir, struct stat *dir_stat, FcSt
     cache->magic = FC_CACHE_MAGIC_ALLOC;
     cache->version = FC_CACHE_CONTENT_VERSION;
     cache->size = serialize->size;
-    cache->mtime = (int) dir_stat->st_mtime;
+    cache->checksum = (int) dir_stat->st_mtime;
 
     /*
      * Serialize directory name

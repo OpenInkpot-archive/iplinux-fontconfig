@@ -1,3 +1,9 @@
+fontconfig (2.8.0-2) zelazny; urgency=low
+
+  * Fix keeping stale cache for fonts on FAT filesystem (OI#312)
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 21 Dec 2009 00:21:14 +0600
+
 fontconfig (2.8.0-1) zelazny; urgency=low
 
   * New upstream release.

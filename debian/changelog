@@ -1,3 +1,10 @@
+fontconfig (2.8.0-3) zelazny; urgency=low
+
+  * Fontconfig accidentally kept cache at /usr/var/cache/fontconfig. Fix
+    it and clean up the /usr mess.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Sun, 21 Mar 2010 14:26:29 +0600
+
 fontconfig (2.8.0-2) zelazny; urgency=low
 
   * Fix keeping stale cache for fonts on FAT filesystem (OI#312)

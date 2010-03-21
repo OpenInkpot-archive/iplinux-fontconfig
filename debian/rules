@@ -42,6 +42,7 @@ install: build
 	dh_prep
 
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	dh_installdirs
 	dh_install
 
 	rm -f debian/fontconfig/etc/fonts/conf.d/*

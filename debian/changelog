@@ -1,3 +1,9 @@
+fontconfig (2.8.0-4) zelazny; urgency=low
+
+  * Add /var/cache/fontconfig directory to package.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Sun, 21 Mar 2010 14:53:17 +0600
+
 fontconfig (2.8.0-3) zelazny; urgency=low
 
   * Fontconfig accidentally kept cache at /usr/var/cache/fontconfig. Fix

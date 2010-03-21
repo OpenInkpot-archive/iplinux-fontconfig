@@ -9,6 +9,7 @@ endif
 
 confflags += --prefix=/usr \
 	--sysconfdir=/etc \
+	--with-cache-dir=/var/cache/fontconfig \
 	--disable-docs \
 	--with-add-fonts=/usr/share/fonts,/usr/local/share/fonts \
 	--with-arch=$(DEB_HOST_GNU_TYPE) \

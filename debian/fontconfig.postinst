@@ -5,8 +5,23 @@ set -e
 #DEBHELPER#  
 
 if [ "$1" = configure ]; then
-  # Force regeneration of all fontconfig cache files.
-  mkdir -p /var/cache/fontconfig
+  # Moving old caches accidentally installed to /usr/var/cache
+  if [ -d /usr/var/cache/fontconfig ]; then
+    rm -rf /usr/var/cache/fontconfig :
+  fi
+  if [ -d /usr/var/cache ]; then
+    rmdir /usr/var/cache
+  fi
+  if [ -d /usr/var ]; then
+    rmdir /usr/var
+  fi
+  # Removing accidentally installed Makefile* from /var/cache/fontconfig
+  if [ -f /var/cache/fontconfig/Makefile ]; then
+    rm -f /var/cache/fontconfig/Makefile* 2>/dev/null || :
+  fi
+  # Removing obsolete cache files
+  rm -f /var/cache/fontconfig/*.cache-2 || :
+
   printf "Regenerating fonts cache... "
   fc-cache -s -f -v 1>/var/log/fontconfig.log 2>&1 || (printf "failed.\nSee /var/log/fontconfig.log for more information.\n"; exit 1)
   printf "done.\n"
